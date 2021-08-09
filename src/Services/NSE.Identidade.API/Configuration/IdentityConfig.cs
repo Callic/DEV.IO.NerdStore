@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NSE.Identidade.API.Data;
 using NSE.Identidade.API.Extensions;
+using NSE.Identidade.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
