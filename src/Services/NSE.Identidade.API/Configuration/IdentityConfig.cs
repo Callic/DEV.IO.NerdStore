@@ -29,6 +29,17 @@ namespace NSE.Identidade.API.Configuration
                 .AddEntityFrameworkStores<ApplicationDbContext>()//para identificar o context do db que vai ser usado
                 .AddDefaultTokenProviders();//Token para validar novo usuário, resetar sehas
 
+            services.TokenConfiguration(configuration);
+            return services;
+        }
+        public static IApplicationBuilder UserIdentityConfiguration(this IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
+            return app;
+        }
+        private static IServiceCollection TokenConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
             #region Configuração Token
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -56,12 +67,6 @@ namespace NSE.Identidade.API.Configuration
                 });
             #endregion
             return services;
-        }
-        public static IApplicationBuilder UserIdentityConfiguration(this IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
-            return app;
         }
     }
 }
