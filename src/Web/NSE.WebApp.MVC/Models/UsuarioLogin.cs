@@ -29,5 +29,6 @@ namespace NSE.WebApp.MVC.Models
         [Display(Name = "Confirme sua senha")]
         [Compare("Senha", ErrorMessage = "As senhas não conferem.")]
         public string SenhaConfirmacao { get; set; }
+
     }
 }

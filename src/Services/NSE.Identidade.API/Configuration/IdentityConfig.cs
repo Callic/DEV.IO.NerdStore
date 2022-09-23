@@ -28,6 +28,13 @@ namespace NSE.Identidade.API.Configuration
                 .AddErrorDescriber<IdentityPortugueseMessages>()//Traduz os erros do identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()//para identificar o context do db que vai ser usado
                 .AddDefaultTokenProviders();//Token para validar novo usuário, resetar sehas
+                
+            services.Configure<IdentityOptions>(opt =>
+            {
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                opt.Lockout.MaxFailedAccessAttempts = 5;
+                opt.Lockout.AllowedForNewUsers = true;
+            });
 
             services.TokenConfiguration(configuration);
             return services;
@@ -42,8 +49,11 @@ namespace NSE.Identidade.API.Configuration
         {
             #region Configuração Token
             var appSettingsSection = configuration.GetSection("AppSettings");
+
             services.Configure<AppSettings>(appSettingsSection);
+
             var appSettings = appSettingsSection.Get<AppSettings>();
+
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
             services.AddAuthentication(opt =>

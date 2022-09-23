@@ -16,10 +16,13 @@ namespace NSE.WebApp.MVC.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+
+            
         }
 
         public IActionResult Index()
         {
+            ViewData["data-bloqueio"] = DateTime.Now;
             return View();
         }
 
@@ -28,10 +31,34 @@ namespace NSE.WebApp.MVC.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("erro/{id:length(3,3)}")]
+        public IActionResult Error(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var modalErro = new ErrorViewModel();
+
+            if (id == 500)
+            {
+                modalErro.Mensagem = "Ocorreu um erro! Tente novamente mais tarde ou cantate o nosso suporte.";
+                modalErro.Titulo = "Ocorreu um erro!";
+                modalErro.CodeErro = id;
+            }else if (id == 404)
+            {
+                modalErro.Mensagem = "A página que você procura não existe! <br/>Em caso de dúvidas, entre em contato com nosso suporte.";
+                modalErro.Titulo = "Opss! Página não encontrada";
+                modalErro.CodeErro = id;
+            }
+            else if (id == 404)
+            {
+                modalErro.Mensagem = "Você não tem permissão para fazer isso.";
+                modalErro.Titulo = "Acesso Negado";
+                modalErro.CodeErro = id;
+            }
+            else
+            {
+                return StatusCode(id);
+            }
+
+            return View("Error", modalErro);
         }
     }
 }

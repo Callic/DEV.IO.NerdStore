@@ -32,6 +32,8 @@ namespace NSE.Identidade.API.Controllers
         [HttpPost("nova-conta")]
         public async Task<ActionResult> Registrar(UsuarioRegistro usuarioRegistro)
         {
+
+            return StatusCode(401);
             if (!ModelState.IsValid) return CustomResponse(ModelState);
             var user = new IdentityUser
             {
@@ -62,7 +64,8 @@ namespace NSE.Identidade.API.Controllers
 
             if (result.IsLockedOut)
             {
-                AdicionarErroProcessamento("O usuário está bloqueado por multiplas tentativas inválidas.");
+                var x = _signInManager.UserManager.Users.Where(s => s.Email == usuarioLogin.Email).FirstOrDefault();
+                AdicionarErroProcessamento($"O usuário está bloqueado por multiplas tentativas inválidas. {x.LockoutEnd}");
                 return CustomResponse();
             }
             AdicionarErroProcessamento("Usuário ou senha inválidos.");
